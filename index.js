@@ -74,11 +74,9 @@ app.get('/welcome', async (req, res) => {
         ctx.shadowBlur = 0;
 
         // Resmi uploads klasörüne kaydet
-        const fileName = `${uuidv4()}.png`;
-        const filePath = path.join(uploadsDir, fileName);
         const buffer = canvas.toBuffer('image/png');
-        fs.writeFileSync(filePath, buffer);
-
+        const base64Image = buffer.toString('base64');
+        res.send(base64Image);
         // Resim linkini döndür
         const imageUrl = `https://${req.get('host')}/uploads/${fileName}`;
         res.setHeader('Content-Type', 'application/json');
