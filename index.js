@@ -80,7 +80,7 @@ app.get('/welcome', async (req, res) => {
         fs.writeFileSync(filePath, buffer);
 
         // Resim linkini döndür
-        const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${fileName}`;
+        const imageUrl = `https://${req.get('host')}/uploads/${fileName}`;
         res.json({ url: imageUrl });
 
     } catch (error) {
