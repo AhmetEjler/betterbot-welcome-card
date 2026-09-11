@@ -1,6 +1,13 @@
 const express = require('express');
 const { createCanvas, loadImage } = require('@napi-rs/canvas');
 const path = require('path');
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+    cloud_name: process.env.Welcome_Card,
+    api_key: process.env.178321835179337,
+    api_secret: process.env.le7yxY-GzwHuxqX_6nxisznyfq8,
+});
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,15 +20,12 @@ app.get('/welcome', async (req, res) => {
     }
 
     try {
-        // 1. Canvas oluştur
         const canvas = createCanvas(1024, 600);
         const ctx = canvas.getContext('2d');
 
-        // 2. Arka planı yükle ve çiz
         const background = await loadImage(path.join(__dirname, 'betterbot-arkaplan.png'));
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        // 3. Avatarı halkanın tam merkezine oturt
         const avatarImage = await loadImage(avatar);
         const avatarSize = 160;
         const avatarCenterX = 498;
@@ -37,7 +41,6 @@ app.get('/welcome', async (req, res) => {
         ctx.drawImage(avatarImage, avatarX, avatarY, avatarSize, avatarSize);
         ctx.restore();
 
-        // 3.1 Avatarın etrafına neon mavi halka çiz
         ctx.beginPath();
         ctx.arc(avatarCenterX, avatarCenterY, (avatarSize / 2) + 4, 0, Math.PI * 2);
         ctx.strokeStyle = '#73A2E0';
@@ -47,7 +50,6 @@ app.get('/welcome', async (req, res) => {
         ctx.stroke();
         ctx.shadowBlur = 0;
 
-        // 4. Kullanıcı adını yaz (halkanın altına, okunaklı şekilde)
         ctx.font = 'bold 34px Arial';
         ctx.fillStyle = '#6396ff';
         ctx.textAlign = 'center';
@@ -55,20 +57,25 @@ app.get('/welcome', async (req, res) => {
         ctx.shadowBlur = 8;
         ctx.fillText(username, canvas.width / 2, 495);
 
-        // 5. Sunucu adını ve üye sayısını yaz
         ctx.font = '22px Arial';
         ctx.fillStyle = '#AAAAAA';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 6;
         ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, 240, 560);
-
-        // Gölgeyi sıfırla
         ctx.shadowBlur = 0;
 
-        // 6. Resmi PNG olarak gönder
         const buffer = canvas.toBuffer('image/png');
-        res.set('Content-Type', 'image/png');
-        res.send(buffer);
+
+        // Resmi Cloudinary'ye yükle
+        const result = await new Promise((resolve, reject) => {
+            cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+            }).end(buffer);
+        });
+
+        // Kalıcı Cloudinary URL'sini döndür
+        res.send(result.secure_url);
 
     } catch (error) {
         console.error(error);
