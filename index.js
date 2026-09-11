@@ -53,14 +53,14 @@ app.get('/welcome', async (req, res) => {
         ctx.textAlign = 'center';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 8;
-        ctx.fillText(username, canvas.width / 2, 440);
+        ctx.fillText(username, canvas.width / 2, 480);
 
         // 5. Sunucu adını ve üye sayısını yaz
         ctx.font = '22px Arial';
         ctx.fillStyle = '#AAAAAA';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 6;
-        ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, 230, 560);
+        ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, 240, 560);
 
         // Gölgeyi sıfırla
         ctx.shadowBlur = 0;
