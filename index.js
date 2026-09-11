@@ -49,7 +49,7 @@ app.get('/welcome', async (req, res) => {
 
         // 4. Kullanıcı adını yaz (halkanın altına, okunaklı şekilde)
         ctx.font = 'bold 34px Arial';
-        ctx.fillStyle = '#73A2E0';
+        ctx.fillStyle = '#6396FF';
         ctx.textAlign = 'center';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 8;
@@ -60,7 +60,7 @@ app.get('/welcome', async (req, res) => {
         ctx.fillStyle = '#AAAAAA';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 6;
-        ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, 238, 560);
+        ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, 240, 560);
 
         // Gölgeyi sıfırla
         ctx.shadowBlur = 0;
