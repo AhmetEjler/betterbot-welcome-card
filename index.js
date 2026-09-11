@@ -25,7 +25,7 @@ app.get('/welcome', async (req, res) => {
         const avatarImage = await loadImage(avatar);
         const avatarSize = 160;
         const avatarCenterX = 512;
-        const avatarCenterY = 265;
+        const avatarCenterY = 312;
         const avatarX = avatarCenterX - (avatarSize / 2);
         const avatarY = avatarCenterY - (avatarSize / 2);
 
