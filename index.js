@@ -60,7 +60,7 @@ app.get('/welcome', async (req, res) => {
         ctx.fillStyle = '#AAAAAA';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 6;
-        ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, 256, 480);
+        ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, 220, 520);
 
         // Gölgeyi sıfırla
         ctx.shadowBlur = 0;
