@@ -5,9 +5,10 @@ const url = require('url');
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
-    cloud_name: process.env.Welcome_Card,
-    api_key: process.env.178321835179337,
-    api_secret: process.env.le7yxY-GzwHuxqX_6nxisznyfq8,
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 });
 
 const app = express();
