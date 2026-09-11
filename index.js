@@ -49,7 +49,7 @@ app.get('/welcome', async (req, res) => {
 
         // 4. Kullanıcı adını yaz (halkanın altına, okunaklı şekilde)
         ctx.font = 'bold 34px Arial';
-        ctx.fillStyle = '#6396FF';
+        ctx.fillStyle = '#6396ff';
         ctx.textAlign = 'center';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 8;
