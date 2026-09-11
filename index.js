@@ -13,7 +13,7 @@ app.get('/welcome', async (req, res) => {
     }
 
     try {
-        // 1. Canvas oluştur (kartının boyutlarına göre ayarla)
+        // 1. Canvas oluştur
         const canvas = createCanvas(1024, 600);
         const ctx = canvas.getContext('2d');
 
@@ -21,30 +21,49 @@ app.get('/welcome', async (req, res) => {
         const background = await loadImage(path.join(__dirname, 'betterbot-arkaplan.png'));
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        // 3. Avatarı yükle ve ortadaki halkaya çiz
+        // 3. Avatarı halkanın tam merkezine oturt
         const avatarImage = await loadImage(avatar);
-        const avatarSize = 180;
-        const avatarX = (canvas.width - avatarSize) / 2;
-        const avatarY = (canvas.height - avatarSize) / 2 - 20;
-        
+        const avatarSize = 160;
+        const avatarCenterX = 512;
+        const avatarCenterY = 265;
+        const avatarX = avatarCenterX - (avatarSize / 2);
+        const avatarY = avatarCenterY - (avatarSize / 2);
+
         ctx.save();
         ctx.beginPath();
-        ctx.arc(avatarX + avatarSize / 2, avatarY + avatarSize / 2, avatarSize / 2, 0, Math.PI * 2);
+        ctx.arc(avatarCenterX, avatarCenterY, avatarSize / 2, 0, Math.PI * 2);
         ctx.closePath();
         ctx.clip();
         ctx.drawImage(avatarImage, avatarX, avatarY, avatarSize, avatarSize);
         ctx.restore();
 
-        // 4. Kullanıcı adını yaz
-        ctx.font = 'bold 36px Arial';
+        // 3.1 Avatarın etrafına neon mavi halka çiz
+        ctx.beginPath();
+        ctx.arc(avatarCenterX, avatarCenterY, (avatarSize / 2) + 4, 0, Math.PI * 2);
+        ctx.strokeStyle = '#00F0FF';
+        ctx.lineWidth = 4;
+        ctx.shadowColor = '#00F0FF';
+        ctx.shadowBlur = 15;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // 4. Kullanıcı adını yaz (halkanın altına, okunaklı şekilde)
+        ctx.font = 'bold 34px Arial';
         ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
-        ctx.fillText(username, canvas.width / 2, canvas.height / 2 + avatarSize / 2 + 50);
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+        ctx.shadowBlur = 8;
+        ctx.fillText(username, canvas.width / 2, 440);
 
-        // 5. Sunucu adını ve üye sayısını yaz (isteğe bağlı)
-        ctx.font = '24px Arial';
+        // 5. Sunucu adını ve üye sayısını yaz
+        ctx.font = '22px Arial';
         ctx.fillStyle = '#AAAAAA';
-        ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, canvas.width / 2, canvas.height / 2 + avatarSize / 2 + 90);
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+        ctx.shadowBlur = 6;
+        ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, canvas.width / 2, 480);
+
+        // Gölgeyi sıfırla
+        ctx.shadowBlur = 0;
 
         // 6. Resmi PNG olarak gönder
         const buffer = canvas.toBuffer('image/png');
