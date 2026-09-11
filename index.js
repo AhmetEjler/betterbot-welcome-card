@@ -13,16 +13,24 @@ cloudinary.config({
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.get('/welcome', async (req, res) => {
-    // URL'yi manuel ayrıştır (req.query yerine)
-    const queryObject = url.parse(req.url, true).query;
-    const { avatar, username, server, members } = queryObject;
+// POST body'sini okuyabilmek için
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-    // Debug logu: gelen parametreleri konsola yaz
+// Hem GET hem POST kabul et
+app.all('/welcome', async (req, res) => {
+    // GET'ten query, POST'tan body parametrelerini oku
+    const queryObject = url.parse(req.url, true).query;
+    
+    const avatar = req.body.avatar || queryObject.avatar;
+    const username = req.body.username || queryObject.username;
+    const server = req.body.server || queryObject.server;
+    const members = req.body.members || queryObject.members;
+
     console.log('Gelen parametreler:', { avatar, username, server, members });
 
     if (!avatar || !username) {
-        return res.status(400).send('avatar ve username parametreleri gerekli. Gelen: ' + JSON.stringify(queryObject));
+        return res.status(400).send('avatar ve username parametreleri gerekli. Gelen: ' + JSON.stringify({ avatar, username }));
     }
 
     try {
@@ -72,7 +80,6 @@ app.get('/welcome', async (req, res) => {
 
         const buffer = canvas.toBuffer('image/png');
 
-        // Cloudinary'ye yükle
         const result = await new Promise((resolve, reject) => {
             cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
                 if (error) reject(error);
@@ -80,7 +87,6 @@ app.get('/welcome', async (req, res) => {
             }).end(buffer);
         });
 
-        // Kalıcı Cloudinary URL'sini döndür
         res.send(result.secure_url);
 
     } catch (error) {
