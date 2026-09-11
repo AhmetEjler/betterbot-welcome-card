@@ -61,7 +61,7 @@ app.get('/welcome', async (req, res) => {
         ctx.shadowBlur = 4;
         ctx.shadowOffsetX = 3;
         ctx.shadowOffsetY = 3;
-        ctx.fillText(username, canvas.width / 2, 440);
+        ctx.fillText(username, canvas.width / 2, 480);
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
