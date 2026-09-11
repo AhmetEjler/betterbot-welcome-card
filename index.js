@@ -24,7 +24,7 @@ app.get('/welcome', async (req, res) => {
         // 3. Avatarı halkanın tam merkezine oturt
         const avatarImage = await loadImage(avatar);
         const avatarSize = 160;
-        const avatarCenterX = 500;
+        const avatarCenterX = 495;
         const avatarCenterY = 212;
         const avatarX = avatarCenterX - (avatarSize / 2);
         const avatarY = avatarCenterY - (avatarSize / 2);
