@@ -82,7 +82,6 @@ app.get('/welcome', async (req, res) => {
         // Resim linkini döndür
         const imageUrl = `https://${req.get('host')}/uploads/${fileName}`;
         res.json({ url: imageUrl });
-
     } catch (error) {
         console.error(error);
         res.status(500).send('Kart oluşturulamadı');
