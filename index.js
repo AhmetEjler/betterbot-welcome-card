@@ -71,7 +71,6 @@ app.get('/welcome', async (req, res) => {
 
         const buffer = canvas.toBuffer('image/png');
 
-        // Cloudinary'ye yükle
         const result = await new Promise((resolve, reject) => {
             cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
                 if (error) reject(error);
