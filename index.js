@@ -4,7 +4,7 @@ const path = require('path');
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
-    cloud_name: process.env.Kök,
+    cloud_name: process.env.BetterKart,
     api_key: process.env.243988395863217,
     api_secret: process.env.le7yxY-GzwHuxqX_6nxisznyfq8,
 });
