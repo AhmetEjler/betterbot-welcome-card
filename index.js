@@ -40,9 +40,9 @@ app.get('/welcome', async (req, res) => {
         // 3.1 Avatarın etrafına neon mavi halka çiz
         ctx.beginPath();
         ctx.arc(avatarCenterX, avatarCenterY, (avatarSize / 2) + 4, 0, Math.PI * 2);
-        ctx.strokeStyle = '#00F0FF';
+        ctx.strokeStyle = '#73A2E0';
         ctx.lineWidth = 4;
-        ctx.shadowColor = '#00F0FF';
+        ctx.shadowColor = '#73A2E0';
         ctx.shadowBlur = 15;
         ctx.stroke();
         ctx.shadowBlur = 0;
