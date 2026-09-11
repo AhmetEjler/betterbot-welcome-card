@@ -1,6 +1,7 @@
 const express = require('express');
 const { createCanvas, loadImage } = require('@napi-rs/canvas');
 const path = require('path');
+const url = require('url');
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
@@ -13,10 +14,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/welcome', async (req, res) => {
-    const { avatar, username, server, members } = req.query;
+    // URL'yi manuel ayrıştır (req.query yerine)
+    const queryObject = url.parse(req.url, true).query;
+    const { avatar, username, server, members } = queryObject;
+
+    // Debug logu: gelen parametreleri konsola yaz
+    console.log('Gelen parametreler:', { avatar, username, server, members });
 
     if (!avatar || !username) {
-        return res.status(400).send('avatar ve username parametreleri gerekli');
+        return res.status(400).send('avatar ve username parametreleri gerekli. Gelen: ' + JSON.stringify(queryObject));
     }
 
     try {
@@ -66,7 +72,7 @@ app.get('/welcome', async (req, res) => {
 
         const buffer = canvas.toBuffer('image/png');
 
-        // Resmi Cloudinary'ye yükle
+        // Cloudinary'ye yükle
         const result = await new Promise((resolve, reject) => {
             cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
                 if (error) reject(error);
@@ -78,8 +84,8 @@ app.get('/welcome', async (req, res) => {
         res.send(result.secure_url);
 
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Kart oluşturulamadı');
+        console.error('Hata:', error);
+        res.status(500).send('Kart oluşturulamadı: ' + error.message);
     }
 });
 
