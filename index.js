@@ -9,18 +9,14 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-});
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// POST body'sini okuyabilmek için
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Hem GET hem POST kabul et
 app.all('/welcome', async (req, res) => {
-    // GET'ten query, POST'tan body parametrelerini oku
     const queryObject = url.parse(req.url, true).query;
     
     const avatar = req.body.avatar || queryObject.avatar;
