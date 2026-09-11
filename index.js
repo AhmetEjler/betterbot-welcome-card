@@ -1,20 +1,16 @@
 const express = require('express');
 const { createCanvas, loadImage } = require('@napi-rs/canvas');
 const path = require('path');
-const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// uploads klasörünü oluştur (yoksa)
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir);
-}
-
-// uploads klasörünü statik olarak sun
-app.use('/uploads', express.static(uploadsDir));
 
 app.get('/welcome', async (req, res) => {
     const { avatar, username, server, members } = req.query;
@@ -32,8 +28,8 @@ app.get('/welcome', async (req, res) => {
 
         const avatarImage = await loadImage(avatar);
         const avatarSize = 160;
-        const avatarCenterX = 498;
-        const avatarCenterY = 212;
+        const avatarCenterX = 512;
+        const avatarCenterY = 265;
         const avatarX = avatarCenterX - (avatarSize / 2);
         const avatarY = avatarCenterY - (avatarSize / 2);
 
@@ -61,7 +57,7 @@ app.get('/welcome', async (req, res) => {
         ctx.shadowBlur = 4;
         ctx.shadowOffsetX = 3;
         ctx.shadowOffsetY = 3;
-        ctx.fillText(username, canvas.width / 2, 480);
+        ctx.fillText(username, canvas.width / 2, 440);
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
@@ -70,17 +66,21 @@ app.get('/welcome', async (req, res) => {
         ctx.fillStyle = '#AAAAAA';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 6;
-        ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, 240, 560);
+        ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, canvas.width / 2, 480);
         ctx.shadowBlur = 0;
 
-        // Resmi uploads klasörüne kaydet
         const buffer = canvas.toBuffer('image/png');
-        const base64Image = buffer.toString('base64');
-        res.send(base64Image);
-        // Resim linkini döndür
-        const imageUrl = `https://${req.get('host')}/uploads/${fileName}`;
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({ url: imageUrl }));
+
+        // Cloudinary'ye yükle
+        const result = await new Promise((resolve, reject) => {
+            cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+            }).end(buffer);
+        });
+
+        res.send(result.secure_url);
+
     } catch (error) {
         console.error(error);
         res.status(500).send('Kart oluşturulamadı');
