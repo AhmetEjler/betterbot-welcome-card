@@ -1,15 +1,13 @@
 {
   "name": "welcome-card-api",
   "version": "1.0.0",
-  "description": "BetterBot 2.0 için resimli hoş geldin kartı API'si",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-"dependencies": {
-  "express": "^4.18.2",
-  "@napi-rs/canvas": "^0.1.44",
-  "cloudinary": "^1.41.0"
-}
+  "dependencies": {
+    "express": "^4.18.2",
+    "@napi-rs/canvas": "^0.1.44",
+    "cloudinary": "^1.41.0"
   }
-
+}
