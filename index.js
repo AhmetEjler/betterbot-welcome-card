@@ -1,9 +1,20 @@
 const express = require('express');
 const { createCanvas, loadImage } = require('@napi-rs/canvas');
 const path = require('path');
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// uploads klasörünü oluştur (yoksa)
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+}
+
+// uploads klasörünü statik olarak sun
+app.use('/uploads', express.static(uploadsDir));
 
 app.get('/welcome', async (req, res) => {
     const { avatar, username, server, members } = req.query;
@@ -13,15 +24,12 @@ app.get('/welcome', async (req, res) => {
     }
 
     try {
-        // 1. Canvas oluştur
         const canvas = createCanvas(1024, 600);
         const ctx = canvas.getContext('2d');
 
-        // 2. Arka planı yükle ve çiz
         const background = await loadImage(path.join(__dirname, 'betterbot-arkaplan.png'));
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        // 3. Avatarı halkanın tam merkezine oturt
         const avatarImage = await loadImage(avatar);
         const avatarSize = 160;
         const avatarCenterX = 498;
@@ -37,38 +45,43 @@ app.get('/welcome', async (req, res) => {
         ctx.drawImage(avatarImage, avatarX, avatarY, avatarSize, avatarSize);
         ctx.restore();
 
-        // 3.1 Avatarın etrafına neon mavi halka çiz
         ctx.beginPath();
         ctx.arc(avatarCenterX, avatarCenterY, (avatarSize / 2) + 4, 0, Math.PI * 2);
-        ctx.strokeStyle = '#73A2E0';
+        ctx.strokeStyle = '#00F0FF';
         ctx.lineWidth = 4;
-        ctx.shadowColor = '#73A2E0';
+        ctx.shadowColor = '#00F0FF';
         ctx.shadowBlur = 15;
         ctx.stroke();
         ctx.shadowBlur = 0;
 
-        // 4. Kullanıcı adını yaz (halkanın altına, okunaklı şekilde)
         ctx.font = 'bold 34px Arial';
-        ctx.fillStyle = '#6396ff';
         ctx.textAlign = 'center';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
-        ctx.shadowBlur = 8;
-        ctx.fillText(username, canvas.width / 2, 495);
+        ctx.fillStyle = '#6396ff';
+        ctx.shadowColor = '#3168d8';
+        ctx.shadowBlur = 4;
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+        ctx.fillText(username, canvas.width / 2, 440);
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
 
-        // 5. Sunucu adını ve üye sayısını yaz
         ctx.font = '22px Arial';
         ctx.fillStyle = '#AAAAAA';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 6;
         ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, 240, 560);
-
-        // Gölgeyi sıfırla
         ctx.shadowBlur = 0;
 
-        // 6. Resmi PNG olarak gönder
+        // Resmi uploads klasörüne kaydet
+        const fileName = `${uuidv4()}.png`;
+        const filePath = path.join(uploadsDir, fileName);
         const buffer = canvas.toBuffer('image/png');
-        res.set('Content-Type', 'image/png');
-        res.send(buffer);
+        fs.writeFileSync(filePath, buffer);
+
+        // Resim linkini döndür
+        const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${fileName}`;
+        res.json({ url: imageUrl });
 
     } catch (error) {
         console.error(error);
