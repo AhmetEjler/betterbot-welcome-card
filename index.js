@@ -72,7 +72,7 @@ app.all('/welcome', async (req, res) => {
         ctx.fillStyle = '#6396ff';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 6;
-        ctx.fillText(`Üye: ${members || '0'}`, 140, 560);
+        ctx.fillText(`Üye: ${members || '0'}`, 110, 560);
         ctx.shadowBlur = 0;
 
         const buffer = canvas.toBuffer('image/png');
