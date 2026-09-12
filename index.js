@@ -66,7 +66,7 @@ app.all('/welcome', async (req, res) => {
         ctx.fillText(username, canvas.width / 2, 495);
 
         ctx.font = '22px Arial';
-        ctx.fillStyle = '#AAAAAA';
+        ctx.fillStyle = '#0586f7';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 6;
         ctx.fillText(`Üye: ${members || '0'}`, 90, 560);
