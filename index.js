@@ -134,10 +134,10 @@ app.all('/goodbye', async (req, res) => {
         ctx.textAlign = 'center';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 8;
-        ctx.fillText(username, canvas.width / 2, 495);
+        ctx.fillText(username, canvas.width / 2, 485);
 
         ctx.font = '22px Arial';
-        ctx.fillStyle = '#AAAAAA';
+        ctx.fillStyle = '#f00606';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 6;
         ctx.fillText(`Üye: ${members || '0'}`, 90, 560);
