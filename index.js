@@ -36,7 +36,7 @@ app.all('/welcome', async (req, res) => {
 
         const avatarImage = await loadImage(avatar);
         const avatarSize = 160;
-        const avatarCenterX = 498;
+        const avatarCenterX = 508;
         const avatarCenterY = 212;
         const avatarX = avatarCenterX - (avatarSize / 2);
         const avatarY = avatarCenterY - (avatarSize / 2);
@@ -107,8 +107,8 @@ app.all('/goodbye', async (req, res) => {
 
         const avatarImage = await loadImage(avatar);
         const avatarSize = 160;
-        const avatarCenterX = 498;
-        const avatarCenterY = 212;
+        const avatarCenterX = 508;
+        const avatarCenterY = 222;
         const avatarX = avatarCenterX - (avatarSize / 2);
         const avatarY = avatarCenterY - (avatarSize / 2);
 
