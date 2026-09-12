@@ -69,10 +69,10 @@ app.all('/welcome', async (req, res) => {
         ctx.fillText(username, canvas.width / 2, 495);
 
         ctx.font = '22px Arial';
-        ctx.fillStyle = '#AAAAAA';
+        ctx.fillStyle = '#6396ff';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
         ctx.shadowBlur = 6;
-        ctx.fillText(`Sunucu: ${server || 'Bilinmiyor'} | Üye: ${members || '0'}`, 240, 560);
+        ctx.fillText(`Üye: ${members || '0'}`, 240, 560);
         ctx.shadowBlur = 0;
 
         const buffer = canvas.toBuffer('image/png');
